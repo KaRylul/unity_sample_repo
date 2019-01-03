@@ -10,7 +10,7 @@ public class AnikiBasicControls : MonoBehaviour
     [SerializeField]
     private float runSpeed = 4f;
     [SerializeField]
-    private float speedSmoothVelocity = 0.01f;
+    private float speedSmoothVelocity = 1f;
     [SerializeField]
     private float speedSmoothTime = 0.01f;
     [SerializeField]
@@ -23,7 +23,7 @@ public class AnikiBasicControls : MonoBehaviour
     [SerializeField]
     private Transform playerCamera;
 
-    private float currentSpeed;
+    private float currentSpeed = 0;
     private float velocityY;
     private float gravity = 15f;
     private CharacterController controller;
@@ -62,12 +62,12 @@ public class AnikiBasicControls : MonoBehaviour
         {
             // this is used to rotate player relatively to camera rotation
             float targetRotation = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
-            //transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, turnSmoothTime);
-            transform.eulerAngles = Vector3.up * targetRotation;
+            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, turnSmoothTime);
+            //transform.eulerAngles = Vector3.up * targetRotation;
         }
 
-        float targetSpeed = walkSpeed;
-        targetSpeed = ((running) ? runSpeed : walkSpeed) * inputDir.magnitude;
+        //float targetSpeed = walkSpeed;
+        float targetSpeed = ((running) ? runSpeed : walkSpeed) * inputDir.magnitude;
 
         currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedSmoothVelocity, speedSmoothTime);
 
@@ -92,7 +92,6 @@ public class AnikiBasicControls : MonoBehaviour
 
         #region Animation
         forwardPercent = currentSpeed;
-        Debug.Log(forwardPercent);
         animator.SetFloat("forwardPercent", currentSpeed);
 
 
